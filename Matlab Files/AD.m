@@ -1,0 +1,107 @@
+function [result] = AD(W,classes,Label)
+%UNTITLED3 Summary of this function goes here
+%   Detailed explanation goes here
+Y=zeros(size(W,1),classes+1);
+for i=1:size(W,1)
+    for j=1:classes+1
+        if(Label(i)==j)
+            Y(i,Label(i))=1;
+        else
+            Y(i,j)=0;
+        end
+    end
+end
+R=zeros(1,classes+1);
+R(1,classes+1)=1;
+Y_cap=Y;
+Beta=2;
+Meu1=4;
+Meu2=4;
+Meu3=2;
+[V,E]=size(W);
+Pr=zeros(V,V);
+for i=1:V
+    sum=0;
+    for j=1:V
+        if(W(i,j)~=0)
+         sum=sum+W(i,j);
+        end
+    end
+    for j=1:V
+        Pr(j,i)=W(i,j)/sum;
+    end
+end
+H=zeros(V,1);
+Pr;
+for i=1:V
+    sum=0;
+    for j=1:V
+        if(W(i,j)~=0)
+          if(Pr(i,j)>0)
+            sum=sum+-1*Pr(i,j)*log(Pr(i,j));
+          end
+        end
+    end
+    H(i,1)=sum;
+end
+C=zeros(V,1);
+for i=1:V
+    C(i,1)=log(Beta)/log(Beta+exp(H(i,1)));
+end
+H;
+C;
+D=zeros(V,1);
+Z=zeros(V,1);
+for i=1:V
+    if(Label(i,1)>0)
+      D(i,1)=(1-C(i,1))*(H(i,1)^0.5);
+    else
+      D(i,1)=0;  
+    end
+    Z(i,1)=max(D(i,1)+C(i,1),1);
+end
+P_inj=zeros(V,1);
+P_cont=zeros(V,1);
+P_abnd=zeros(V,1);
+for i=1:V
+    P_inj(i,1)=D(i,1)/Z(i,1);
+    P_cont(i,1)=C(i,1)/Z(i,1);
+    P_abnd(i,1)=1-P_inj(i,1)-P_cont(i,1);
+end
+for k=1:500
+   D=zeros(V,classes+1); 
+   Y_old=Y_cap;
+   Y_cap;
+   for i=1:V
+       sum=0;
+       for j=1:V
+           D(i,:)=D(i,:)+W(j,i)*Y_cap(j,:);
+           sum=sum+W(i,j);
+       end
+       if(sum~=0)
+          D(i,:)=D(i,:)/sum;
+       end
+   end
+   for i=1:V
+       Y_cap(i,:)=(Meu1*P_inj(i,1)*Y(i,:)+Meu2*D(i,:)+Meu3*P_abnd(i,1)*R);
+   end
+   if((abs(norm(Y_cap)^2-norm(Y_old)^2))<=(.001))
+       break
+   end
+end
+Y_cap
+result=[];
+for i=1:V
+    maxi=-1;
+    index=-1;
+    for j=1:classes
+        if(Y_cap(i,j)>maxi)
+            maxi=Y_cap(i,j);
+            index=j; 
+        end
+    end
+    result=[result index];
+end
+result;
+end
+

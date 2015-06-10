@@ -217,6 +217,7 @@ DD** MAD(DD** W,LL Rows,LL Classes, DD* Labels)
    if((fabs(pow(norm(Y_cap,Rows,Classes+1),2)-pow(norm(Y_old,Rows,Classes+1),2)))<=(0.001))
        break;
    }
+   
    return Y_cap; 
 }
 // arrange labels in descending order as in first give 0 labels then 1

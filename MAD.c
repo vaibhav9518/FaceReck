@@ -232,11 +232,5 @@ int main(){
 	DD* labels=(DD*)calloc(3,sizeof(DD));
 	labels[0]=0;labels[1]=1;labels[2]=-1;
 	DD** n=MAD(k,3,2,labels);
-	/*FOR(i,3)
-	{
-		FOR(j,3)
-		printf("%e ",n[i][j]);
-		printf("\n");
-	}*/
 	return 0;
 }

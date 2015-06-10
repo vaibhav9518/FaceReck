@@ -1,36 +1,60 @@
-function [ w, b, Yu, obj ] = primal_tsvm( X, Y, opt, w0);
-% === Solve the TSVM problem in the primal
 
-  X = [X ones(length(Y),1)]; % Append one dimension for b
+DD** Transpose(DD **Mat1, LL Rows, LL Columns)
+{
+	LL i, j;
+	DD** Temp = (DD**)calloc(Columns, sizeof(DD*));
+	for (i = 0; i<Columns; i++)
+	{
+		Temp[i] = (DD*)calloc(Rows, sizeof(DD));
+	}
+	for (i = 0; i<Rows; i++)
+	{
+		for (j = 0; j<Columns; j++)
+		{
+			Temp[j][i] = Mat1[i][j];
+		}
+	}
+	return Temp;
+}
+/*
+* INPUT: A Matrix Mat1 of Size MxP
+*		: A Matrix Mat2 of Size PxQ
+*		: The Dimensions M, Q, P
+* OUTPUT: Resultant Matrix
+*/
+DD** Multiply_Matrices(DD **Mat1, DD **Mat2, LL M, LL Q, LL P)
+{
+	LL i, c, d, k;
+	DD Sum = 0;
+	//Mat1=Precise(Mat1,M,P);
+	//Mat2=Precise(Mat2,P,Q);
+	DD** Temp = (DD**)calloc(M, sizeof(DD*));
+	FOR(i, M)
+		Temp[i] = (DD*)calloc(Q, sizeof(DD));
 
-  % Global variables (not avoid giving them as arguments to obj_fun)
-  global X_;  X_ =X;         
-  global Xu_; Xu_=X(Y==0,:)'; % To speed-up obj_fun
-  global R; % Rotation matrix to enforce constraint (5)
-  
-  % At each step, C* will be multiplied by exponent (2 in the paper)
-  exponent = (opt.Cfinal/opt.Cinit)^(1/(opt.nofIter+1));
-  C = opt.C;
-  C2 = opt.Cinit;
+	FOR(c, M)
+	{
+		FOR(d, Q)
+		{
+			FOR(k, P)
+			{
+				Sum += (Mat1[c][k] * Mat2[k][d]);
+			}
+			Temp[c][d] = Sum;
+			Sum = 0;
+		}
+	}
+	return Temp;
+}
 
-  n = size(X,2);
-  
-  % We want to enforce vbal'*w = cbal
-  vbal = ones(1,size(X,1));
-  if any(Y==0)
-    vbal(Y~=0) = 0;
-  end;
-  vbal = vbal*X;
-  cbal = mean(Y(Y~=0)) * sum(vbal);
-  % That can be done by rotating w in a new basis which has as
-  % first component vbal. The first component of w in the new basis
-  % in then fixed to w1
-  [R,foo1,foo2] = svd(vbal'); clear foo1 foo2;
-void primal_tsvm(double **X, double *Y,double ** w0,long rows,long columns,long Y_rows,double Cfinal,double Cinit,long nofIter)  
+void primal_tsvm(double **X, double *Y,double ** w0,long w0_rows,long w0_columns,long rows,long columns,long Y_rows,double Cfinal,double C,double Cinit,long nofIter)  
 {
 	double ** new_X=(double**)calloc(rows,sizeof(double*));
-	double **Xu,**R,C,C2,exponent;
-	long i,j,zeros;
+	double **Xu,**R,C1,C2,exponent,**vbal,cbal=0,sum_vbal=0;
+	vbal=(double**)calloc(1,sizeof(double*));
+	vbal[0]=(double*)calloc(rows,sizeof(double));
+	long i,j,zeros,n;
+	for(i=0;i<rows;i++)vbal[0][i]=1;
 	for(i=0;i<rows;i++)
 	{
 	new_X[i]=(double*)calloc(columns+1,sizeof(double));
@@ -56,8 +80,61 @@ void primal_tsvm(double **X, double *Y,double ** w0,long rows,long columns,long 
     	}
     }
     exponent=pow(Cfinal/Cinit,1/(nofIter+1));
-    
-	
+    C1=C;
+    C2=Cinit;
+    n=columns+1;
+    if(zeros>0)
+    {
+    	for(i=0;i<Y_rows;i++)
+    	{
+    		if(Y_rows[i]>0)
+    		{
+    			vbal[0][i]=0;
+    		}
+    	}
+    }
+    vbal=Multiply_Matrices(vbal,new_X,1,rows,columns+1);
+    j=0;
+    for(i=0;i<Y_rows;i++)
+    	{
+    		if(Y_rows[i]>0)
+    		{
+    			j+=1
+    			cbal+=Y_rows;
+    		}
+    	}
+    for(i=0;i<columns+1;i++)sum_vbal+=vabl[0][i];
+    cbal=(cbal/j)*sum_vbal;
+	vbal=Transpose(vbal,1,columns+1);
+	SVD(vbal,columns+1,1,R);
+	DD** newR=(double**)calloc(columns+1,sizeof(double*));
+	for(i=0;i<columns+1;i++)
+	{
+		newR[i]=(double*)calloc(1,sizeof(double));
+		newR[i][0]=R[i][0];
+	}
+	DD** w=Multiply_Matrices(vbal,newR,1,1,columsn+1)
+	DD w1=cbal/w[0][0];
+	if(w0==NULL)
+	{
+	  DD** w=(double**)calloc(n-1,sizeof(double*));	
+	  for(i=0;i<n-1;i++)
+	  {
+	  	w[i]=(double*)calloc(1,sizeof(double));	
+	  }
+	}
+	else{
+		DD** new_newR=(double**)calloc(columns+1,sizeof(double*));	
+		for(i=0;i<columns+1;i++)
+		{
+			new_newR[i]=(double*)calloc(columns,sizeof(double));	
+			for(j=0;j<columns;j++)
+			{
+				new_newR[i][j]=R[i][j+1];
+			}
+		}
+		DD** w=Multiply_Matrices(Transpose(new_newR,columns+1,columns),w0,columns,w0_rows,columns+1);
+	}
 }
   /*
   w1 = cbal/(vbal*R(:,1));

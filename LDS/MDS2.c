@@ -41,12 +41,6 @@ void Subtract_Rows(DD *Row1, DD *Row2, LL N)
 	FOR(i, N)
 		Row1[i] -= Row2[i];
 }
-/*
-* INPUT: A Matrix Mat1 of Size MxP
-*		: A Matrix Mat2 of Size PxQ
-*		: The Dimensions M, Q, P
-* OUTPUT: Resultant Matrix
-*/
 DD** Multiply_Matrices(DD **Mat1, DD **Mat2, LL M, LL Q, LL P)
 {
 	LL i, c, d, k;

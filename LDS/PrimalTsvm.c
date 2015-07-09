@@ -16,12 +16,6 @@ DD** Transpose(DD **Mat1, LL Rows, LL Columns)
 	}
 	return Temp;
 }
-/*
-* INPUT: A Matrix Mat1 of Size MxP
-*		: A Matrix Mat2 of Size PxQ
-*		: The Dimensions M, Q, P
-* OUTPUT: Resultant Matrix
-*/
 DD** Multiply_Matrices(DD **Mat1, DD **Mat2, LL M, LL Q, LL P)
 {
 	LL i, c, d, k;

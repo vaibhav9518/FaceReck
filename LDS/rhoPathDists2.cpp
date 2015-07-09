@@ -1,12 +1,7 @@
-#include "mex.h"
-#include <assert.h>
 #include <math.h>
-
-
-
-static const char* const copyright =
-  "Calculate squared rho-path distances of a set of points to a subset on a nearest neighbor graph.\n"
-  "Written by Alexander Zien, MPI-Kyb, 2004.";
+#include <stdio.h>
+#include <assert.h>
+#include <malloc.h>
 
 static const char* const syntax =
   "USAGE: [ E2 ] = rhoPathDists2( D2, NN, subset, [rho=2] )\n";
@@ -145,7 +140,7 @@ void calcPathDists0( double* const E2,
     const int i = subset[ ii ];
     // --- prepare (squared distances, set of open nodes)
     for( j = 0; j < n; ++j ) {
-      e0[j] =  mxGetInf();
+      e0[j] =  pow(10,320);
       openTrack[j] = -1;
     }
     e0[i] = 0;
@@ -213,7 +208,7 @@ void calcPathDistsInf( double* const E2,
     const int i = subset[ ii ];
     // --- prepare (squared distances, set of open nodes)
     for( j = 0; j < n; ++j ) {
-      e2[j] =  mxGetInf();
+      e2[j] =  pow(10,320);
       openTrack[j] = -1;
     }
     e2[i] = 0;
@@ -288,7 +283,7 @@ void calcPathDistsRho( double* const E2,
     const int i = subset[ ii ];
     // --- prepare (squared distances, set of open nodes)
     for( j = 0; j < n; ++j ) {
-      er[j] =  mxGetInf();
+      er[j] =  pow(10,320);
       openTrack[j] = -1;
     }
     er[i] = 0;
@@ -339,92 +334,63 @@ void calcPathDistsRho( double* const E2,
 //=== Main
 //=============================================================================//
 
-void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] )
+double ** rhoPathDists2(double **D2_,long k,long n,double ** NN_,double rho,double * subset_,long l)	
 {
-  // === check number of params
-  // - output params
-  if( !( 1 <= nlhs && nlhs <= 1 ) ) {
-    mexErrMsgTxt( syntax );
-  }
-  // - input params
-  if( !( 3 <= nrhs && nrhs <= 4 ) ) {
-    if( nrhs == 0 ) {
-      printf( "%s\n", copyright );
-      plhs[0] = mxCreateDoubleMatrix( 1, 1, mxREAL );
-      double* const results = mxGetPr( plhs[0] );
-      results[ 0 ] = mxGetNaN();
-      return;
-    }
-    mexErrMsgTxt( syntax );
-  }
-
-  // === process input
-  #define D2_ ( prhs[ 0 ] )
-  #define NN_ ( prhs[ 1 ] )
-  #define subset_ ( prhs[ 2 ] )
-  #define rho_ ( prhs[ 3 ] )
-  // - initialize variables
-  const double* const D2 = mxGetPr( D2_ );
-  const int* const NN = (int*) mxGetData( NN_ );
-  const double* const doubleSubset = mxGetPr( subset_ );
-  const double rho = ( nrhs < 3 ) ? 2 : *mxGetPr( rho_ );
-  const int k = ( NN == NULL ) ? 0 : mxGetM( D2_ );
-  const int n = mxGetN( D2_ );
-  const int l = mxGetN( subset_ );
-  // - check input
-  if( k == 0 ) {
-    if( !( mxGetM( D2_ ) == n ) ) {
-      printf( "Since no 'NN' is given, 'D2' must be square.\n" );
-      mexErrMsgTxt( syntax );
-    }
-  } else {
-    if( !( mxGetClassID( NN_ ) == mxINT32_CLASS ) ) {
-      printf( "'NN' must be an integer (INT32) matrix.\n" );
-      mexErrMsgTxt( syntax );
-    }
-    if( !( mxGetM( NN_ ) == k && mxGetN( NN_ ) == n ) ) {
-      printf( "'NN' and 'D2' must be of the same size.\n" );
-      mexErrMsgTxt( syntax );
-    }
-  }
-  if( D2 == NULL || doubleSubset == NULL ) {
-    printf( "'D2' and 'subset' must be real matrices.\n" );
-    mexErrMsgTxt( syntax );
-  }
-  if( !( mxGetM( subset_ ) == 1 ) ) {
-    printf( "'subset' must be a row vector.\n" );
-    mexErrMsgTxt( syntax );
-  }
-  if( !( rho >= 0 ) ) {
-    printf( "'rho' must be non-negative.\n" );
-    mexErrMsgTxt( syntax );
-  }
-
-  // === compute and return distances
-  // - prepare subset
   int* subset = new int[ l ];
-  int i;
-  for( i = 0; i < l; ++i ) {
-    register const int subset_i = (int) doubleSubset[ i ] - 1;
-    if( !( 0 <= subset_i && subset_i < n ) ) {
-      mexErrMsgTxt( "Element of 'subset' out of range.\n" );
+  int i,j;
+  double* const doubleSubset =new double[l];
+  double* const D2 = new double[ k * n ];
+  int* const NN= new int[k*n];
+  for(i=0;i<n;i++)
+  {
+  	for(j=0;j<k;j++)
+  	{
+	  	D2[i*k+j]=D2_[j][i];
+	  	if(NN_!=NULL)NN[i*k+j]=(int)NN_[j][i];
     }
+  }
+  for(i=0;i<l;i++)doubleSubset[i]=subset_[i];
+  for( i = 0; i < l; ++i ) 
+  {
+    register const int subset_i = (int) doubleSubset[ i ] - 1;
     subset[i] = subset_i;
   }
-  // - compute distances
-  plhs[0] = mxCreateDoubleMatrix( n, l, mxREAL );
-  double* const E2 = mxGetPr( plhs[0] );
-  if( rho == 0.0 ) {
+  double* const E2 = new double[n*l];
+  double** return_mat=new double*[n];
+  for(i=0;i<n;i++)return_mat[i]=new double[l];
+  if(NN_==NULL)k=0;
+  if( rho == 0.0 ) 
+  {
     calcPathDists0( E2, n, l, k, D2, NN, subset );
-  } else if( rho ==  mxGetInf() ) {
+  } 
+  else if( rho >=pow(10,320) ) 
+  {
     calcPathDistsInf( E2, n, l, k, D2, NN, subset );
-  } else {
+  } 
+  else 
+  {
     calcPathDistsRho( E2, n, l, k, D2, NN, subset, rho );
   }
-  // - clean up
+  for(i=0;i<l;i++)
+  {
+	  for(j=0;j<n;j++)
+	  {
+	  	return_mat[j][i]=E2[i*l+j];
+	  }
+  } 
   delete[] subset;
+  return return_mat;
+  // - clean up
 }
-
+MAT final(MAT D2,MAT NN,double* subset,long rows,double rho)
+{
+	double **E2=rhoPathDists2(D2.matrix,D2.rows,D2.columns,NN.matrix,rho,subset,rows);
+	MAT out;
+	out.matrix=E2;
+	out.rows=rows;
+	out.columns=D2.columns;
+	return out;
+}
 
 
 

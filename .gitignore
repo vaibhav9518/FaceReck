@@ -1,0 +1,9 @@
+# Object file
+*.o
+
+# Video Files
+*.mp4
+
+# python compiled files
+*.pyc 
+ 

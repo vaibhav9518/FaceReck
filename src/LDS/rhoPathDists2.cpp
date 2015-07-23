@@ -2,9 +2,6 @@
 #include <stdio.h>
 #include <assert.h>
 #include <malloc.h>
-static const char* const copyright =
-  "Calculate squared rho-path distances of a set of points to a subset on a nearest neighbor graph.\n"
-  "Written by Alexander Zien, MPI-Kyb, 2004.";
 
 static const char* const syntax =
   "USAGE: [ E2 ] = rhoPathDists2( D2, NN, subset, [rho=2] )\n";

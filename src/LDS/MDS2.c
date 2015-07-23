@@ -41,18 +41,10 @@ void Subtract_Rows(DD *Row1, DD *Row2, LL N)
 	FOR(i, N)
 		Row1[i] -= Row2[i];
 }
-/*
-* INPUT: A Matrix Mat1 of Size MxP
-*		: A Matrix Mat2 of Size PxQ
-*		: The Dimensions M, Q, P
-* OUTPUT: Resultant Matrix
-*/
 DD** Multiply_Matrices(DD **Mat1, DD **Mat2, LL M, LL Q, LL P)
 {
 	LL i, c, d, k;
 	DD Sum = 0;
-	//Mat1=Precise(Mat1,M,P);
-	//Mat2=Precise(Mat2,P,Q);
 	DD** Temp = (DD**)calloc(M, sizeof(DD*));
 	FOR(i, M)
 		Temp[i] = (DD*)calloc(Q, sizeof(DD));
@@ -139,24 +131,7 @@ long find_eigen2(double **mat, long n, double***vec, double**values)
 	free(data);
 	return count;
 }
-/*
 
-function [Y, L] = mds(D,opt)
-% Classical Multidimensional Scaling.
-
-if opt.verb >= 1, fprintf('Computing MDS ...\n'); end;
-n = length(D);
-
-if opt.delta>=0
-  H = eye(n) - repmat(1/n,n,n);
-  K = H * (-.5 * D) * H;
-  [V L] = eig((K+K')./2);
-  [L ind] = sort(-diag(L)); 
-  L = -L;
-  
-  keep = find(L > 1e-10*max(L)); 
-  Y = V(:,ind(keep)) * diag(sqrt(L(keep)));
-*/
 double ** H_mat(long n)
 {
 	long i, j;
@@ -251,64 +226,6 @@ int main(){
 	    }
         Y=Multiply_Matrices(V,mult_V,n,magn_keep,magn_keep);
 	}
-	
-	/*
-	else
-  k = -opt.delta;
-  H = eye(n) - repmat(1/n,n,n);
-  K = H * (-.5 * D) * H;
-  K = (K+K')/2;
-  
-  [V L] = eig(K(1:k,1:k));
-  L = diag(L);
-  keep = find(L > 1e-10*max(L)); 
-  V = V(:,keep) .* repmat(L(keep)'.^(-1/2),k,1);
-  Y = K(:,1:k)*V;
-  L = L(keep);
-	*/
-	/*else{
-		k=-delta;
-		H=H_mat;
-		new_K= (DD**)calloc(k, sizeof(DD*));
-		FOR(i, rows)
-	    {   
-		new_k[i]=(DD*)calloc(k, sizeof(DD));
-	    }
-		FOR(i,rows)
-		{
-			FOR(j,columns)
-			new_D[i][j]=-0.5*D[i][j];
-		}
-		K=Multiply_Matrices(H,Multiply_Matrices(new_D,H,n,n,n), n, n, n);
-		FOR(i,k)
-		{
-		    idx[i]=i+1;
-			FOR(j,k)
-			new_k[i][j]=(k[i][j]+k[j][i])/2;
-		}
-		find_eigen2(new_k,k,&temp, &val);
-		FOR(i,n)
-		{
-		if(val[i]>max_val)max_val=val[i];
-	    }
-	    FOR(i,n){
-        	if(val[i]>pow(2.3,-10)*max_val){
-			keep[magn_keep]=i;
-        	magn_keep++;
-            }
-        }
-        mult_V= (DD**)calloc(magn_keep, sizeof(DD*));
-        FOR(i, n)V[i] = (DD*)calloc(magn_keep, sizeof(DD));
-        FOR(i,magn_keep)
-		{
-		mult_V[i]=(DD*)calloc(magn_keep, sizeof(DD));
-		FOR(j,n)
-		  {
-		    V[j][i]=temp[j][keep[i]];
-		    mult_V[j][i]=val[keep[i]];	
-		  }
-	    }
-	}*/
 	
 	FOR(i, rows)
 	{

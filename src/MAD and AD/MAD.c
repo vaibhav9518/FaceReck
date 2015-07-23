@@ -5,7 +5,7 @@ New Regularized Algorithms for Transductive Learning by Partha Pratim Talukdar a
 DD** MAD(DD** W,LL Rows,LL Classes, DD* Labels)
 {
 	LL i=0,j=0,k=0,l=0;
-	DD Beta=2,Meu1=4,Meu2=4,Meu3=0.40,sum=0;
+	DD Beta=2,Meu1=4,Meu2=4,Meu3=2,sum=0;
 	
 	//Initialize Y, Y_cap and R Matrix
 	DD** Y=Zeros(Rows,Classes+1);
@@ -105,7 +105,7 @@ DD** MAD(DD** W,LL Rows,LL Classes, DD* Labels)
    free(Z);
    FOR(i,Rows)free(H[i]);
    free(H);
-   FOR(k,1000)
+   FOR(k,500)
    {
    D=Zeros(Rows,Classes+1); 
    DD**Y_old=Copy(Y_cap,Rows,Classes+1); 
@@ -132,7 +132,7 @@ DD** MAD(DD** W,LL Rows,LL Classes, DD* Labels)
    {
    	DD max=Y_cap[i][0];
    	results[i][0]=0;
-   	FOR(j,Classes+1)
+   	FOR(j,Classes)
    	{
    		if(Y_cap[i][j]>max)
    		{

@@ -1,2 +1,0 @@
-g++ -I/usr/local/include -I /home/vaibhavsharma/armadillo-5.200.2/include -c Source.cpp
-g++ -L/usr/local/lib -DARMA_DONT_USE_WRAPPER Source.o -lgsl -lgslcblas -lm -lblas -llapack

@@ -41,7 +41,7 @@ $(OBJPATH)/calcDefaultSigma.o : $(SRCPATH)/calcDefaultSigma.c
 	$(CC) $(CFLAGS) -I include $< -o $@
 
 $(OBJPATH)/main.o : $(SRCPATH)/main.c
-	$(CC) $(CFLAGS) -I include $< -o $@
+	gcc $(CFLAGS) -I include $< -o $@
 
 clean:
 	\rm $(OBJPATH)/*.o *~ p1

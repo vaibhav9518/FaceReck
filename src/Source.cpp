@@ -6,6 +6,15 @@
 #include <stdlib.h>
 #include <functions.h>
 #include <stdbool.h>
+#include <string.h>
+char *outFile;
+char* combine(char *a,char *b)
+{
+  char *c=(char*)malloc(strlen(a) + strlen(b) + 1);
+  strcpy(c,a);
+  strcat(c,b);
+  return c;
+}
 #define FOR(i,n) for(i=0;i<n;i++)
 #define error(i) printf(i); 
 using namespace arma;
@@ -335,7 +344,9 @@ double ** train_one_split(MAT Xnldr, double *Yl,long Yl_rows,long m0, Opt opt,lo
                         new_Y.matrix[i][0]=index+1;
                 } 
         FILE *fp;
-        fp=fopen("../results.txt","w");
+        char *new_string;
+        new_string=combine(outFile,"/../results.txt");
+        fp=fopen(new_string,"w");
         FOR(i,new_Y.rows)
 		{ 
 			fprintf(fp,"%lf\n",new_Y.matrix[i][0]);
@@ -516,7 +527,9 @@ int main(int argc,char * argv[]){
   long rows=atoi(argv[3]),columns=atoi(argv[2]),columns2=atoi(argv[1])-columns,i,j;	
   FILE *fp;
   //fp=fopen("data/final_file_train.txt","r");
-  fp=fopen("../data/final_file_train.txt","r");
+  char *new_string;
+  new_string=combine(argv[4],"/../data/final_file_train.txt");
+  fp=fopen(new_string,"r");
   DD** k=(DD**)calloc(rows,sizeof(DD*));
   FOR(i,rows)
   {
@@ -531,7 +544,8 @@ int main(int argc,char * argv[]){
   }
   fclose(fp);
   //fp=fopen("data/final_file_test.txt","r");
-  fp=fopen("../data/final_file_test.txt","r");
+  new_string=combine(argv[4],"/../data/final_file_test.txt");
+  fp=fopen(new_string,"r");
   DD** k2=(DD**)calloc(rows,sizeof(DD*));
   FOR(i,rows)
   {
@@ -546,9 +560,9 @@ int main(int argc,char * argv[]){
   } 
   fclose(fp);
   DD* Yl=(DD*)calloc(columns,sizeof(DD*));
-  FOR(i,20)
+  FOR(i,columns)
   {
-	  if(i<10)
+	  if(i<columns/2)
 	     Yl[i]=1;
 	  else 
 	     Yl[i]=2;
@@ -564,6 +578,7 @@ int main(int argc,char * argv[]){
   opt.opt_tb = 1;
   opt.maxiter = 3;
   opt.tolfun = exp(-5);
+  outFile=argv[4];
   //calcRbfKernel();
   DD** y=LDS(k,rows,columns,k2,rows,columns2,Yl,columns,3,0.5,opt);
   return 0;

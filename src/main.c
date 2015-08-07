@@ -1,10 +1,20 @@
 #include <MAD.h>
+#include <string.h>
+char* combine(char *a,char *b)
+{
+  char *c=malloc(strlen(a) + strlen(b) + 1);
+  strcpy(c,a);
+  strcat(c,b);
+  return c;
+}
 // arrange labels in descending order as in first give 0 labels then 1
 // the matrix are read row wise as in each vector is a row of matrix k using it we form a weight matrix W
 int main(int argc,char** argv){
     LL i,j,confident_vectors;
     FILE *file1;
-    file1 = fopen("vectors.txt", "r");
+    char *new_string;
+    new_string=combine(argv[4],"/vectors.txt");
+    file1 = fopen(new_string, "r");
     LL rows=atoi(argv[1]),columns=atoi(argv[3]);
     confident_vectors=atoi(argv[2]);
     DD** k=(DD**)calloc(rows,sizeof(DD*));
@@ -27,21 +37,24 @@ int main(int argc,char** argv){
     {
 	labels[i]=-1;
     }
-    file1 = fopen("1.txt", "r");
+    new_string=combine(argv[4],"/1.txt");
+    file1 = fopen(new_string, "r");
     FOR(i,confident_vectors)
     {
     fscanf(file1,"%ld\n",&j);
     labels[j]=1;
     }
     fclose(file1);
-    file1 = fopen("2.txt", "r");
+    new_string=combine(argv[4],"/2.txt");
+    file1 = fopen(new_string, "r");
     FOR(i,confident_vectors)
     {
     fscanf(file1,"%ld\n",&j);
     labels[j]=0;
     }
     DD** results=MAD(k,rows,2,labels);
-    file1 = fopen("results.txt", "w");
+    new_string=combine(argv[4],"/../results.txt");
+    file1 = fopen(new_string, "w");
     FOR(i,rows)
     {
         if(((int)results[i][0])==0)fprintf(file1,"Image number %ld is of Kareeena\n",i+1);

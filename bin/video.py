@@ -2,7 +2,7 @@ import numpy as np
 import cv2,sys,os
 import numpy
 import threading
-
+cur_dir=os.path.dirname(os.path.realpath(__file__))
 class FaceDetect:
 
    def __init__(self,video,numFrames,File,faceCascade):
@@ -24,7 +24,7 @@ class FaceDetect:
        a=numpy.array(a)
        a=a.reshape(1,50*50)
        numpy.savetxt(self.File,a,fmt="%10.2f")
-       cv2.imwrite("../Images/file"+str(N)+".jpg",crop_img)
+       cv2.imwrite(cur_dir+"/../Images/file"+str(N)+".jpg",crop_img)
    
    def detect(self,frame):
        faces = self.faceCascade.detectMultiScale(
@@ -62,12 +62,10 @@ class FaceDetect:
        print "Done" 
        print "Total Images:",val
        self.File.close()
-       print LDSorMAD,data1,data2
-       raw_input('check')
        if(LDSorMAD=='MAD'):
-          os.system("python MAD_classifier.py "+str(val)+" "+data1+" "+data2)
+          os.system("python "+cur_dir+"/MAD_classifier.py "+str(val)+" "+data1+" "+data2)
        else:
-          os.system("python LDS_classifier.py "+str(val)+" "+data1+" "+data2)   
+          os.system("python "+cur_dir+"/LDS_classifier.py "+str(val)+" "+data1+" "+data2)   
        cap.release()
 
    def other(self):
@@ -98,7 +96,7 @@ else:
    assert(len(sys.argv)>=4)
    cascPath = sys.argv[1]
    faceCascade = cv2.CascadeClassifier(cascPath)
-   File="vectors.txt"
+   File=cur_dir+"/vectors.txt"
    numframes=int(sys.argv[2])
    video=sys.argv[3]
    X=FaceDetect(video,numframes,File,faceCascade)

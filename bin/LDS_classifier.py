@@ -9,6 +9,7 @@ from sklearn import decomposition
 gc.collect()
 number_of_test_vectors=299
 confident_vectors=10
+cur_dir=os.path.dirname(os.path.realpath(__file__))
 #os.system("g++ ../src/Source.cpp -o LDS -I ../include -L/usr/local/lib -DARMA_DONT_USE_WRAPPER -lblas -llapack -lgsl -lgslcblas -lm") 
 #print sys.argv[1]
 def check_accuracy(Y,number,classes):
@@ -32,7 +33,6 @@ def check_accuracy2(Y,number,classes):
 X=[]
 dimension=2500
 print sys.argv[2],sys.argv[3]
-raw_input("check")
 X=X+list(np.fromfile(sys.argv[2],float,2500*300," "))
 X=X+list(np.fromfile(sys.argv[3],float,2500*300," "))
 pca=decomposition.KernelPCA(kernel='poly',degree=2)
@@ -43,7 +43,7 @@ pca.fit(list(X))
 X=np.array(pca.transform(list(X)))
 print X.shape
 Test_number=int(sys.argv[1])
-Pre=np.fromfile("vectors.txt",float,dimension*Test_number,"  ")
+Pre=np.fromfile(cur_dir+"/vectors.txt",float,dimension*Test_number,"  ")
 #Y=[0]*234+[1]*147
 Y=[0]*300+[1]*300
 print len(Y)
@@ -73,8 +73,8 @@ for i in range(confident_vectors):
     best_vectors=best_vectors+[two_D[-i-1]]
     F2_lis+=[two_D[-i-1][1]]
 final_labels=["" for x in range(len(Pre))]
-f1=open("../data/final_file_train.txt","w")
-f2=open("../data/final_file_test.txt","w")
+f1=open(cur_dir+"/../data/final_file_train.txt","w")
+f2=open(cur_dir+"/../data/final_file_test.txt","w")
 for i in F1_lis:
     final_labels[i]=1
     for j in Pre[i]:
@@ -90,12 +90,12 @@ for i in range(len(Pre)):
 f1.close()
 f2.close()            
 print "\n---------Confident vectors generated--------\n"
-os.system("./LDS "+str(len(Pre))+" "+str(2*confident_vectors)+" "+str(dimension))
+os.system(cur_dir+"/LDS "+str(len(Pre))+" "+str(2*confident_vectors)+" "+str(dimension)+" "+cur_dir)
 #os.remove("LDS")
-file=open("../results.txt","r")
+file=open(cur_dir+"/../results.txt","r")
 result=[int(float(x)) for x in file.read().split()]
 file.close()
-file=open("../results.txt","w")
+file=open(cur_dir+"/../results.txt","w")
 k=0 
 for m in range(len(Pre)):
     if(final_labels[m]==""):
@@ -108,3 +108,4 @@ for m in range(len(Pre)):
     else:
        file.write("\nImage number %d is of others\n"%m)          
 file.close()
+os.remove(cur_dir+"/vectors.txt")

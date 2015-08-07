@@ -8,7 +8,8 @@ import sklearn.svm as svm
 from sklearn import decomposition
 gc.collect()
 confident_vectors=20
-os.system("gcc ../src/main.c -o MAD -I ../include -lm")
+cur_dir=os.path.dirname(os.path.realpath(__file__))
+#os.system("gcc " "../src/main.c -o MAD -I ../include -lm")
 def check_accuracy(Y,number,classes):
     correct=0.0
     Y=list(Y)
@@ -28,8 +29,6 @@ def check_accuracy2(Y,number,classes):
                    correct+=1.0
     return correct/len(Y)
 
-print sys.argv[2],sys.argv[3]
-raw_input("check")
 X=list(np.fromfile(sys.argv[2],float,2500*300," "))
 X=X+list(np.fromfile(sys.argv[3],float,2500*300," "))
 
@@ -41,7 +40,7 @@ pca.fit(list(X))
 X=np.array(pca.transform(list(X)))
 
 Test_number=int(sys.argv[1])
-Pre=np.fromfile("vectors.txt",float,2500*Test_number,"  ")
+Pre=np.fromfile(cur_dir+"/vectors.txt",float,2500*Test_number,"  ")
 Pre=Pre.reshape(Test_number,dimension)
 dimension=len(X[0])
 Pre=np.array(pca.transform(list(Pre)))
@@ -58,17 +57,18 @@ two_D=[]
 for i in range(number_of_test_vectors):
     two_D+=[[a[i],i]]
 two_D=sorted(two_D,key=lambda x:x[0])
-f1=open("1.txt","w")
-f2=open("2.txt","w")
+f1=open(cur_dir+"/1.txt","w")
+f2=open(cur_dir+"/2.txt","w")
 for i in range(confident_vectors):
     f1.write(str(two_D[i][1])+"\n")
     f2.write(str(two_D[-i-1][1])+"\n")
 f1.close()
 f2.close()
 print "\n---------Confident vectors generated--------\n"
-os.system("./MAD "+str(Test_number)+" "+str(confident_vectors)+" "+str(dimension))
-os.remove("1.txt")
-os.remove("2.txt")
-os.remove("vectors.txt")
+os.system(cur_dir+"/MAD "+str(Test_number)+" "+str(confident_vectors)+" "+str(dimension)+" "+cur_dir)
+print "MAD Done"
+os.remove(cur_dir+"/1.txt")
+os.remove(cur_dir+"/2.txt")
+os.remove(cur_dir+"/vectors.txt")
 #os.remove("MAD")
 

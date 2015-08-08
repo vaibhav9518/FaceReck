@@ -1,5 +1,5 @@
 # FaceReck
-###Google/PSU Summer of Code project:
+###Google/PSU Summer of Code 2015 project:
 ######Face Detection and Recognition in Videos (using semi-supervised learning based Algorithms)
 
 * **Mentoring Organization**: Portland State University

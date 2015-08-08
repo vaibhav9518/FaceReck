@@ -22,11 +22,26 @@ CC = g++
 DEBUG = -g
 CFLAGS = -c $(DEBUG)
 LFLAGS = $(DEBUG) 
+Libs = -lblas -llapack -lgsl -lgslcblas
 
+help:   info
+
+info:
+	@echo
+	@echo "make for FaceReck, developed by Vaibhav Sharma, 2015"
+	@echo 
+	@echo "Type 'make MAD' for building MAD executable"
+	@echo 
+	@echo "Type 'make LDS' for building LDS executable"
+	@echo 
+	@echo "or Type 'make all' for both."
+
+MAD: $(EXEC2)
+LDS: $(EXEC)
 all: $(EXEC) $(EXEC2)
 
 $(EXEC) : $(OBJS)
-	$(CC) $(LFLAGS) $(OBJS) -o $@ -DARMA_DONT_USE_WRAPPER -lblas -llapack -lgsl -lgslcblas -lm
+	$(CC) $(LFLAGS) $(OBJS) -o $@ -DARMA_DONT_USE_WRAPPER $(Libs) -lm
 
 $(EXEC2) : $(OBJS2)
 	$(CC) $(LFLAGS) $(OBJS2) -o $(EXEC2) -lm

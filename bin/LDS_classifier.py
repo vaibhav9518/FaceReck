@@ -102,9 +102,9 @@ for m in range(len(Pre)):
         final_labels[m]=result[k]
         k+=1
     if(final_labels[m]==1):
-       file.write("\nImage number %d is of salman\n"%m)    
+       file.write("\nImage number %d is of class 1\n"%m)    
     elif(final_labels[m]==2):
-       file.write("\nImage number %d is of madhuri\n"%m)       
+       file.write("\nImage number %d is of class 2\n"%m)       
     else:
        file.write("\nImage number %d is of others\n"%m)          
 file.close()

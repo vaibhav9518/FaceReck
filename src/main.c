@@ -57,8 +57,8 @@ int main(int argc,char** argv){
     file1 = fopen(new_string, "w");
     FOR(i,rows)
     {
-        if(((int)results[i][0])==0)fprintf(file1,"Image number %ld is of Kareeena\n",i+1);
-        else if(((int)results[i][0])==1)fprintf(file1,"Image number %ld is of Amir\n",i+1);
+        if(((int)results[i][0])==0)fprintf(file1,"Image number %ld is of class 1\n",i+1);
+        else if(((int)results[i][0])==1)fprintf(file1,"Image number %ld is of class 2\n",i+1);
         else fprintf(file1,"others\n");
     }
     fclose(file1);

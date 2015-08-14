@@ -1,0 +1,4 @@
+Download the training data and video required to run the example from here:
+https://drive.google.com/file/d/0B9i0fnOFMkRvd1RRVzhXWUE1VkU/view?usp=sharing
+
+and then run either shell scripts to see the program in action.

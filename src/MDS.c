@@ -80,61 +80,6 @@ void find_eigen(double **mat, int n, double*** res_vec, double** res_val)
 }
 
 
-long find_eigen2(double **mat, long n, double***vec, double**values)
-{
-	long i, j, count = 0;
-	double *data = (double*)calloc(((long)(n*n)), sizeof(double));
-	for (i = 0; i<n; i++)
-	{
-		for (j = 0; j<n; j++)
-		{
-			data[i*n + j] = mat[i][j];
-		}
-	}
-	gsl_matrix_view m= gsl_matrix_view_array(data, n, n);
-	gsl_vector_complex *eval = gsl_vector_complex_alloc(n);
-	gsl_matrix_complex *evec = gsl_matrix_complex_alloc(n, n);
-	gsl_eigen_nonsymmv_workspace * w =gsl_eigen_nonsymmv_alloc(n);
-	gsl_eigen_nonsymmv(&m.matrix, eval, evec, w);
-	gsl_eigen_nonsymmv_free(w);
-	gsl_eigen_nonsymmv_sort(eval, evec,GSL_EIGEN_SORT_ABS_DESC);
-	{
-		int i;
-		for (i = 0; i < n; i++)
-		{
-			gsl_complex eval_i= gsl_vector_complex_get(eval, i);
-			double check = GSL_IMAG(eval_i);
-			if (!check)count++;
-		}
-	}
-	double *eig_values = (double*)calloc(count, sizeof(double));
-	double** eig_vec = (double**)calloc(n, sizeof(double*));
-	for (i = 0; i<n; i++)eig_vec[i] = (double*)calloc(count, sizeof(double));
-	{
-		int i, j, l;
-		for (i = 0, l = 0; i < n; i++)
-		{
-			gsl_complex eval_i= gsl_vector_complex_get(eval, i);
-			double check = GSL_IMAG(eval_i);
-			if (!check)
-			{
-				eig_values[l] = GSL_REAL(eval_i);
-				for (j = 0; j<n; j++)
-				{
-					gsl_vector_complex_view evec_i= gsl_matrix_complex_column(evec, i);
-					eig_vec[j][l] = GSL_REAL(gsl_vector_complex_get(&evec_i.vector, j));
-				}
-				l++;
-			}
-		}
-	}
-	*vec = eig_vec;
-	*values = eig_values;
-	gsl_vector_complex_free(eval);
-	gsl_matrix_complex_free(evec);
-	free(data);
-	return count;
-}
 
 
 DD** Multiply_Matrices_mds(DD **Mat1, DD **Mat2, LL M, LL Q, LL P)
@@ -211,9 +156,7 @@ Output_mds MDS(DD** D,long rows,long columns, DD delta)
 			FOR(j, rows)
 				new_k[i][j] = (K[i][j] + K[j][i]) / 2;
 		}
-		//FOR(i,n)free(K[i]);free(K);
 		find_eigen(new_k, n, &temp, &val);
-		//FOR(i,n)free(new_k[i]);free(new_k);
 		j = n - 1;
 		for (i = 0; i < n / 2; i++) 
 		{
@@ -256,9 +199,6 @@ Output_mds MDS(DD** D,long rows,long columns, DD delta)
 			}
 		}
 		V = Multiply_Matrices_mds(V, mult_V, n, magn_keep, magn_keep);
-        //FOR(i,magn_keep)free(mult_V[i]);
-        //free(mult_V);
-        //free(keep);free(idx);  
 		MAT return_MAT;
 		return_MAT.matrix = V;
 		return_MAT.rows = n;

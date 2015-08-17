@@ -12,9 +12,12 @@ class FaceDetect:
         self.faceCascade=faceCascade
 
    def crop(self,img,x,y,w,h,N):
-       print "Cropping image number",N
        crop_img = img[y:y+h,x:x+w] 
        crop_img=cv2.resize(crop_img,(50,50),fx=0,fy=0)
+       gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY) 
+       if(np.max(cv2.convertScaleAbs(cv2.Laplacian(gray,3)))<150):
+        return False
+       print "Cropping image number",N 
        a=[]
        for i in crop_img:
            b=[]
@@ -25,6 +28,7 @@ class FaceDetect:
        a=a.reshape(1,50*50)
        numpy.savetxt(self.File,a,fmt="%10.2f")
        cv2.imwrite(cur_dir+"/../Images/file"+str(N)+".jpg",crop_img)
+       return True
    
    def detect(self,frame):
        faces = self.faceCascade.detectMultiScale(
@@ -54,7 +58,8 @@ class FaceDetect:
           for (x, y, w, h) in faces:
             val+=1 
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-            self.crop(frame,x,y,w,h,val)  
+            if( not self.crop(frame,x,y,w,h,val)):
+                val-=1 
 
           if cv2.waitKey(1) & 0xFF == ord('q'):
              break  

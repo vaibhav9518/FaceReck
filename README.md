@@ -7,8 +7,11 @@
 * **Student**: Vaibhav Sharma
 
 ##Overview
-FaceReck is software tool that is built using C,C++ and python, which can be used to recognize famous personalities
-in Videos. 
+FaceReck is a software tool built using C,C++ and python, which can be used to recognize faces of celebrities
+in Videos. The tool uses semi-supervised learning which is a class of supervised learning that also makes use of unlabeled data for training.
+The tool has two main algorithms implemented are :
+* **Modified Adsorption** - http://talukdar.net/papers/adsorption_ecml09.pdf
+* **Low Density Separation** -http://www.gatsby.ucl.ac.uk/aistats/fullpapers/198.pdf
 
 ##Prerequisites
 The following libraries should be installed before installing this software:

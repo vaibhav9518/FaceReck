@@ -13,6 +13,6 @@ The following libraries should be installed before installing this software:
     * Numpy
     * scikit-learn
     * python-opencv
-* ** C++ Libraries**
+* **C++ Libraries**
     * GSL (GNU scientific library, version 1.7 or higher )   
     * Armadillo

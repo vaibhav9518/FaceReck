@@ -35,9 +35,9 @@ Three executables will be created in the 'bin' folder after installation process
 
 ### Usage
 The 'Training_data' folder contains two files, one for training of face detection system and another `make_data.py` 
-python file that can be used to generate new training data files from images. These data files can be passed as 
+file, which can be used to generate new training data files from images. These data files can be passed as 
 arguments to the software for training the software to recognize new celebrities.
-The make_data.py file takes paths to folders that contain images of celebrities. The folder should contain atleast 300 images
-of each celebrity and each image should have size 50X50 pixels.
+
+The make_data.py file takes arguments(paths to folders) that contain images of celebrities. The folder should contain atleast 300 images of each celebrity and each image should have size 50X50 pixels.
 
 

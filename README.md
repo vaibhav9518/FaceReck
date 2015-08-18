@@ -65,6 +65,6 @@ FaceReck takes 4 arguments:
 The `Examples` directory has two example shell scripts. These files require training data and videos,link to which is provided in the about.txt file.
 You can also run the tool using example data and change the second argument as per the algorithm requirement.
 ```
-$FaceReck Example_data/Video/Zoobi_doobi.mp4 LDS Example_data/amir_data.txt Example_data/kareena_data.txt
+$ FaceReck Example_data/Video/Zoobi_doobi.mp4 LDS Example_data/amir_data.txt Example_data/kareena_data.txt
 ```
 

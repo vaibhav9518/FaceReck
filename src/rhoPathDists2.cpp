@@ -2,7 +2,10 @@
 #include <stdio.h>
 #include <assert.h>
 #include <malloc.h>
+<<<<<<< HEAD
 
+=======
+>>>>>>> b070673d730b0fcea767e5c09bdaef9758114607
 
 inline double min( double a, double b )
 {
@@ -16,6 +19,17 @@ inline double max( double a, double b )
 }
 
 
+<<<<<<< HEAD
+=======
+//=============================================================================//
+//=== Priority Queue (implemented as Binary Heap)
+//=============================================================================//
+
+//-----------------------------------------------------------------------------//
+//--- insert (reduce distance if already queued)
+//-----------------------------------------------------------------------------//
+
+>>>>>>> b070673d730b0fcea767e5c09bdaef9758114607
 inline void insertIntoPq( int& n, int* const heap, int* const track, const double* const dists, int element )
 {
   register const double d_element = dists[ element ];

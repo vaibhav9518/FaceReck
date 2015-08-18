@@ -51,6 +51,7 @@ typedef struct{
 	DD tolFun;
 	
 } Opt2;
+
 typedef struct{
     DD pathNorm;
     LL nofNn;
@@ -58,6 +59,7 @@ typedef struct{
     LL rbf;
     DD sigma;
 } Param;
+
 #include "CalcNnDists.c"
 #include "GraphDistKernelC.c"
 #include "MDS.c"

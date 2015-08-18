@@ -28,35 +28,7 @@ void quicksort(double* x,long first,long last){
 
     }
 }
-/*function [ sigma ] = calcDefaultSigma( e2, k );
 
-e2 = sort( e2 );
-nl = length( e2 );
-sigma2 = e2( 1 + round( nl / k ) );
-if( sigma2 == +inf )
-  idx = find( e2 < inf );
-  if( length(idx) == 0 )
-    sigma2 = 1;
-  else
-    sigma2 = max( e2(idx) );
-    if( sigma2 <= 0 )
-      sigma2 = 1;
-    end;
-  end;
-end;
-if( sigma2 <= 0 )
-  idx = find( e2 > 0 );
-  if( length(idx) == 0 )
-    sigma2 = 1;
-  else
-    sigma2 = min( e2(idx) );
-    if( sigma2 == +inf )
-      sigma2 = 1;
-    end;
-  end;
-end;
-assert( 0 < sigma2 & sigma2 < +inf );
-sigma = sqrt( sigma2 );*/
 double calcDefaultSigma(double *e2,double k,long size)
 {
 	double sigma2;
@@ -89,14 +61,4 @@ double calcDefaultSigma(double *e2,double k,long size)
 	}
 	return pow(sigma2,0.5);
 }
-/*
-int main(){
-	int i;
-	double *x=(double*)calloc(3,sizeof(double));
-	//printf("%lf \n",round(1.0/3.0));
-	x[0]=3;x[1]=2;x[2]=1;
-	quicksort(x,0,2);
-	for(i=0;i<3;i++)printf("%lf ",x[i]);
-	printf("%lf ",calcDefaultSigma(x,2,3));
-	return 0;
-}*/
+

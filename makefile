@@ -22,7 +22,7 @@ CC = g++
 DEBUG = -g
 CFLAGS = -c $(DEBUG)
 LFLAGS = $(DEBUG) 
-Libs = -lblas -llapack -lgsl -lgslcblas
+Libs = -lgsl -lgslcblas -larmadillo
 
 help:   info
 
@@ -41,7 +41,7 @@ LDS: $(EXEC)
 all: $(EXEC) $(EXEC2)
 
 $(EXEC) : $(OBJS)
-	$(CC) $(LFLAGS) $(OBJS) -o $@ -DARMA_DONT_USE_WRAPPER $(Libs) -lm
+	$(CC) $(LFLAGS) $(OBJS) -o $@ $(Libs) -lm
 
 $(EXEC2) : $(OBJS2)
 	$(CC) $(LFLAGS) $(OBJS2) -o $(EXEC2) -lm

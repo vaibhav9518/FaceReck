@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <string.h>
 char *outFile;
+
 char* combine(char *a,char *b)
 {
   char *c=(char*)malloc(strlen(a) + strlen(b) + 1);
@@ -15,17 +16,20 @@ char* combine(char *a,char *b)
   strcat(c,b);
   return c;
 }
+
 #define FOR(i,n) for(i=0;i<n;i++)
 #define error(i) printf(i); 
 using namespace arma;
 using namespace std;
 typedef double DD;
 typedef long LL;
+
 typedef struct{
 	LL rows;
 	LL columns;
 	DD** matrix;
 } MAT;
+
 typedef struct{
     DD delta;       
     LL nofIter;        
@@ -40,6 +44,7 @@ typedef struct{
     DD s;
     DD* splits;
 } Opt;
+
 typedef struct{
 	DD tolX;
 	LL length;
@@ -122,7 +127,6 @@ DD** LDS(DD **Xl, LL d0, LL m0, DD **Xu, LL d1, LL m1, DD *Yl, LL Yl_rows, LL cl
 	opt.opt_tb = 1;
 	opt.maxiter = 3;
 	opt.tolfun = exp(-5);
-//	if ((d0 != d1) | ((m0 != Yl_rows) & ((m0 + m1) != Yl_rows)))error("Dimensions mismatch\n");
 	if((1>opt.nofIter)|(opt.C<0)|((opt.Cinit<0)&&(opt.Cinit>opt.Cfinal))|(opt.sigma<0))error("Assertion error");
 	LL m = m0 + m1;
 	if((opt.nofNn<0)|(opt.nofNn>m))error("Assertion error");
@@ -153,9 +157,7 @@ DD** LDS(DD **Xl, LL d0, LL m0, DD **Xu, LL d1, LL m1, DD *Yl, LL Yl_rows, LL cl
 	FOR(i, m)
 	{
 		idx[i] = i + 1;
-		//printf("%lf ", idx[i]);
 	}
-	//if(isinf(param.sigma))printf("\n%lf not inf\n",param.sigma);
 	MAT E2 = graphDistKernelC(X, D2, NN, param, idx, m);
     FOR(i,X.rows)free(X.matrix[i]);free(X.matrix); 
     FOR(i,opt.nofNn){free(D2.matrix[i]);free(NN.matrix[i]);}free(D2.matrix);free(NN.matrix);
@@ -302,8 +304,6 @@ double ** train_one_split(MAT Xnldr, double *Yl,long Yl_rows,long m0, Opt opt,lo
                                 else{
                                  printf("%ld Amir \n",i);
                                  } 
-                //if((pr.Yu.matrix[i][0]>0)&&(i<58))count+=1;
-                //if((pr.Yu.matrix[i][0]<0)&&(i>=58))count+=1;
             }
             printf("\n total %d\n\n",count);
                return pr.Yu.matrix;
@@ -328,12 +328,10 @@ double ** train_one_split(MAT Xnldr, double *Yl,long Yl_rows,long m0, Opt opt,lo
 					Y0.matrix[j][0] = 1;
 				else Y0.matrix[j][0] = -1;
 			}
-			//print(Y0.matrix, Y0.rows, Y0.columns);
 			pr = primal_tsvm(Xnldr, Y0, w0, opt);
 			FOR(j, new_Y.rows)new_Y.matrix[j][i] = pr.Yu.matrix[j][0];
 			final_obj += pr.obj;
 		}
-		//print(new_Y.matrix, new_Y.rows, new_Y.columns);
         int count=0;
         FOR(i,new_Y.rows){
                         LL index=0;
@@ -350,14 +348,6 @@ double ** train_one_split(MAT Xnldr, double *Yl,long Yl_rows,long m0, Opt opt,lo
         FOR(i,new_Y.rows)
 		{ 
 			fprintf(fp,"%lf\n",new_Y.matrix[i][0]);
-            //fprintf(fp,"\nImage number %ld is of ",i);
-			/*if(new_Y.matrix[i][0]==1)fprintf(fp,"salman \n");//fprintf(fp,"Amir\n");
-			if(new_Y.matrix[i][0]==2)fprintf(fp,"madhuri\n");//fprintf(fp,"Amitabh\n");
-			if(new_Y.matrix[i][0]==3)fprintf(fp,"others\n");//fprintf(fp,"Hrithik\n");
-			if(new_Y.matrix[i][0]==4)fprintf(fp,"4\n");//fprintf(fp,"Kareena\n");
-			if(new_Y.matrix[i][0]==5)fprintf(fp,"5\n");//fprintf(fp,"Katrina\n");
-			if(new_Y.matrix[i][0]==6)fprintf(fp,"6\n");//fprintf(fp,"Shahrukh\n");
-			//fprintf(fp,"%.1lf ",new_Y.matrix[i][0]);*/
         }
         fclose(fp);
 	}
@@ -526,7 +516,6 @@ Output_Primal primal_tsvm(MAT X, MAT Y, MAT w0, Opt opt)
 int main(int argc,char * argv[]){
   long rows=atoi(argv[3]),columns=atoi(argv[2]),columns2=atoi(argv[1])-columns,i,j;	
   FILE *fp;
-  //fp=fopen("data/final_file_train.txt","r");
   char *new_string;
   new_string=combine(argv[4],"/../data/final_file_train.txt");
   fp=fopen(new_string,"r");
@@ -543,7 +532,6 @@ int main(int argc,char * argv[]){
 	  }
   }
   fclose(fp);
-  //fp=fopen("data/final_file_test.txt","r");
   new_string=combine(argv[4],"/../data/final_file_test.txt");
   fp=fopen(new_string,"r");
   DD** k2=(DD**)calloc(rows,sizeof(DD*));
@@ -579,7 +567,6 @@ int main(int argc,char * argv[]){
   opt.maxiter = 3;
   opt.tolfun = exp(-5);
   outFile=argv[4];
-  //calcRbfKernel();
   DD** y=LDS(k,rows,columns,k2,rows,columns2,Yl,columns,3,0.5,opt);
   return 0;
 }

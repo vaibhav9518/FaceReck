@@ -32,7 +32,6 @@ MAT graphDistKernelC(MAT X,MAT D2, MAT NN,Param param,double * idx,long rows3)
 	MAT E2=final(D2,NN,idx,rows3,param.pathNorm);
 	if(isinf(param.sigma))
 	{
-        //printf("\nis inf");
 		return E2;
 	}   
 }

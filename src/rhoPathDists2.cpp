@@ -2,21 +2,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <malloc.h>
-static const char* const copyright =
-  "Calculate squared rho-path distances of a set of points to a subset on a nearest neighbor graph.\n"
-  "Written by Alexander Zien, MPI-Kyb, 2004.";
 
-static const char* const syntax =
-  "USAGE: [ E2 ] = rhoPathDists2( D2, NN, subset, [rho=2] )\n";
-
-
-//=============================================================================//
-//=== Auxilliary
-//=============================================================================//
-
-//-----------------------------------------------------------------------------//
-//--- elementary computations
-//-----------------------------------------------------------------------------//
 
 inline double min( double a, double b )
 {
@@ -29,15 +15,6 @@ inline double max( double a, double b )
   return a > b ? a : b;
 }
 
-
-
-//=============================================================================//
-//=== Priority Queue (implemented as Binary Heap)
-//=============================================================================//
-
-//-----------------------------------------------------------------------------//
-//--- insert (reduce distance if already queued)
-//-----------------------------------------------------------------------------//
 
 inline void insertIntoPq( int& n, int* const heap, int* const track, const double* const dists, int element )
 {
@@ -62,10 +39,6 @@ inline void insertIntoPq( int& n, int* const heap, int* const track, const doubl
   track[ element ] = actual;
 }
 
-
-//-----------------------------------------------------------------------------//
-//--- remove first (shortest distance) and return it
-//-----------------------------------------------------------------------------//
 
 inline int fetchFirstFromPq( int& n, int* const heap, int* const track, const double* const dists )
 {
@@ -118,7 +91,6 @@ void calcPathDists0( double* const E2,
 		     const double* const D2, const int* const NN,
 		     const int* const subset )
 {
-  // === variables
   double* D0 = ( k == 0 ) ? new double[ n * n ] : new double[ k * n ];
   double* e0;
   int* openHeap = new int[ n ];
@@ -126,7 +98,6 @@ void calcPathDists0( double* const E2,
   int nofOpen;
   int ii;
   register int j;
-  // === un-square distances
   if( k == 0 ) {
     for( j = 0; j < n*n; ++j ) {
       D0[j] = sqrt( D2[j] );
@@ -137,11 +108,9 @@ void calcPathDists0( double* const E2,
       D0[p] = sqrt( D2[p] );
     }
   }
-  // === compute
   e0 = E2;
   for( ii = 0; ii < l; ++ii ) {
     const int i = subset[ ii ];
-    // --- prepare (squared distances, set of open nodes)
     for( j = 0; j < n; ++j ) {
       e0[j] =  pow(10,320);
       openTrack[j] = -1;
@@ -149,7 +118,6 @@ void calcPathDists0( double* const E2,
     e0[i] = 0;
     nofOpen = 0;
     insertIntoPq( nofOpen, openHeap, openTrack, e0, i );
-    // --- iteratively update squared distances
     while( nofOpen > 0 ) {
       const int jStar = fetchFirstFromPq( nofOpen, openHeap, openTrack, e0 );
       register const double d0Star = e0[ jStar ];
@@ -158,7 +126,7 @@ void calcPathDists0( double* const E2,
 	for( j = 0; j < n; ++j ) {
 	  if( d0Star + d0[j] < e0[j] ) {
 	    e0[j] = d0Star + d0[j];
-	    insertIntoPq( nofOpen, openHeap, openTrack, e0, j );  // or update, if already in queue
+	    insertIntoPq( nofOpen, openHeap, openTrack, e0, j );  
 	  }
 	}
       } else {
@@ -169,7 +137,7 @@ void calcPathDists0( double* const E2,
 	  register const int j = nn[ p ] - 1;
 	  if( d0Star + d0[p] < e0[j] ) {
 	    e0[j] = d0Star + d0[p];
-	    insertIntoPq( nofOpen, openHeap, openTrack, e0, j );  // or update, if already in queue
+	    insertIntoPq( nofOpen, openHeap, openTrack, e0, j );  
 	  }
 	}
       }

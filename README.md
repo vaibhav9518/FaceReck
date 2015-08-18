@@ -1,13 +1,16 @@
 # FaceReck
-###Google/PSU Summer of Code 2015 project:
+##Google/PSU Summer of Code 2015 project:
 ######Face Detection and Recognition in Videos (using semi-supervised learning based Algorithms)
 
 * **Mentoring Organization**: Portland State University
 * **Mentor**: Bart Massey
 * **Student**: Vaibhav Sharma
 
+##Overview
+FaceReck is software tool that is built using C,C++ and python, which can be used to recognize famous personalities
+in Videos. 
 
-###Prerequisites
+##Prerequisites
 The following libraries should be installed before installing this software:
 * **Python libraries**
     * Scipy
@@ -19,7 +22,7 @@ The following libraries should be installed before installing this software:
     * Armadillo
 
 
-### Installation
+## Installation
 From linux terminal navigate to the directory FaceReck-master and run the shell script 'install.sh'.
 ```
 $ cd path/to/FaceReck-master
@@ -33,7 +36,7 @@ $ make help
 Three executables will be created in the 'bin' folder after installation process.
 
 
-### Usage
+## Usage
 ##### For creating training data
 The 'Training_data' folder contains two files, one for training of face detection system and another `make_data.py` 
 file, which can be used to generate new training data files from images. These data files can be passed as 

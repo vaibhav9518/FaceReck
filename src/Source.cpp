@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <string.h>
 char *outFile;
+
 char* combine(char *a,char *b)
 {
   char *c=(char*)malloc(strlen(a) + strlen(b) + 1);
@@ -15,6 +16,7 @@ char* combine(char *a,char *b)
   strcat(c,b);
   return c;
 }
+
 #define FOR(i,n) for(i=0;i<n;i++)
 #define error(i) printf(i); 
 using namespace arma;
@@ -157,9 +159,7 @@ DD** LDS(DD **Xl, LL d0, LL m0, DD **Xu, LL d1, LL m1, DD *Yl, LL Yl_rows, LL cl
 	FOR(i, m)
 	{
 		idx[i] = i + 1;
-		//printf("%lf ", idx[i]);
 	}
-	//if(isinf(param.sigma))printf("\n%lf not inf\n",param.sigma);
 	MAT E2 = graphDistKernelC(X, D2, NN, param, idx, m);
     FOR(i,X.rows)free(X.matrix[i]);free(X.matrix); 
     FOR(i,opt.nofNn){free(D2.matrix[i]);free(NN.matrix[i]);}free(D2.matrix);free(NN.matrix);

@@ -74,7 +74,7 @@ Output_mini minimize(MAT w_in,double w1,double *Y,long Y_rows,double C,double C2
 								printf("error -ve value in sqaure root");
 								getchar();
 							    }
-				                z2 = (sqrt(B*B-A*d2*z3*z3)-B)/A; //this step can give problems      
+				                z2 = (sqrt(B*B-A*d2*z3*z3)-B)/A; //this step can cause problems      
 					  		}
 					  		if(isinf(z2)|isnan(z2))z2=z3/2;
 					  		z2 = max(min(z2, INT*z3),(1-INT)*z3);  

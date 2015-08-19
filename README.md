@@ -7,8 +7,8 @@
 * **Student**: Vaibhav Sharma
 
 ##Overview
-FaceReck is a software tool built using C,C++ and python, which can be used to recognize faces of celebrities
-in Videos. The tool uses semi-supervised learning which is a class of supervised learning that also makes use of unlabeled data for training.
+FaceReck is a software tool built using C, C++ and Python, which can be used to recognize faces of celebrities
+in videos. The tool uses semi-supervised learning which is a class of supervised learning that also makes use of unlabeled data for training.
 The tool has two main algorithms implemented:
 * **Modified Adsorption** - http://talukdar.net/papers/adsorption_ecml09.pdf
 * **Low Density Separation** -http://www.gatsby.ucl.ac.uk/aistats/fullpapers/198.pdf
@@ -26,34 +26,34 @@ The following libraries should be installed before installing this software:
 
 
 ## Installation
-From linux terminal navigate to the directory FaceReck-master and run the shell script 'install.sh'.
+From linux terminal, navigate to the directory `FaceReck-master` and run the shell script `install.sh`.
 ```
 $ cd path/to/FaceReck-master
 $ sh install.sh
 ```
-The file 'install.sh' will create a new directory and will compile the source files present in the src directory,for
-manual compilation type 'make help' in terminal.
+The file 'install.sh' will create a new directory and will compile the source files present in the src directory. 
+For manual compilation type 'make help' in terminal.
 ```
 $ make help
 ```
-Three executables will be created in the 'bin' folder after installation process.
+Three executables will be created in the `bin` folder after the installation process is complete.
 
 
 ## Usage
 
 ##### For creating training data
-The 'Training_data' directory contains two files, one for the training of the face detection system and another `make_data.py` file, which can be used to generate new training data files from images. These data files can be 
+The `Training_data` directory contains two files, an XML file for the training the face detection system and another `make_data.py`Python file, which can be used to generate new training data files from images. These data files can be 
 passed as arguments to the software tool for training it to recognize new celebrities.
 
-The make_data.py file takes arguments(paths to folders) that contain images of celebrities. The folder should contain atleast 300 images of each celebrity and each image should have size 50X50 pixels.
+The make_data.py file takes in as arguments(paths to folders) that contain images of celebrities. The folder should contain atleast 300 images of each celebrity and each image should have size 50X50 pixels.
 ```
 $ python path/to/make_data.py path/to/folder1 path/to/folder2
 ```
-This command will execute the python script and will create two .txt files in the current directory(`data1.txt` and `data2.txt`). These files contain features of dimension 2500, extracted from the images present in the folders passed as arguments.
+This command will execute the python script and will create two `.txt` files in the current directory(`data1.txt` and `data2.txt`). These files contain features of dimension 2500, extracted from the images present in the folders passed as arguments.
 
 ##### For running the tool
-The bin folder contains a python file FaceReck which can be executed by typing `FaceReck` in the terminal. This file creates PyQT based GUI that has 3 buttons: `Start`,`Stop` and `Test`. The video is displayed in the GUI and if you press `Test` then the Face detection system starts cropping faces from the current frame. All the images generated are saved in the `Images` folder.
-You can check the output in the `results` file or in the text-box displayed with the video and compare it wiht the images generated. Also the information like output of supervised classifier, current image being cropped and total faces detected
+The bin folder contains a python file FaceReck which can be executed by typing `FaceReck` in the terminal. This file creates a PyQT based GUI that has 3 buttons: `Start`,`Stop` and `Test`. The video is displayed in the GUI and upon pressing `Test` the Face detection system starts cropping faces from the current frame. All the images generated are saved in the `Images` folder.
+The output can be check through the `results` file or in the text-box displayed with the video and compare it with the images generated. Also, information like the output of supervised classifier, current image being cropped and total faces detected
 is shown as output on the terminal.
 
 FaceReck takes 4 arguments:

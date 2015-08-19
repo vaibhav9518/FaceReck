@@ -316,11 +316,6 @@ void calcPathDistsRho( double* const E2,
 }
 
 
-
-//=============================================================================//
-//=== Main
-//=============================================================================//
-
 double ** rhoPathDists2(double **D2_,long k,long n,double ** NN_,double rho,double * subset_,long l)	
 {
   int* subset = new int[ l ];
@@ -365,9 +360,9 @@ double ** rhoPathDists2(double **D2_,long k,long n,double ** NN_,double rho,doub
 	  	return_mat[j][i]=E2[i*l+j];
 	  }
   } 
+  // - clean up
   delete[] subset;
   return return_mat;
-  // - clean up
 }
 MAT final(MAT D2,MAT NN,double* subset,long rows,double rho)
 {

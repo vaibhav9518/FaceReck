@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+// Sorting function to sort the matrix according to the sort function in MATLAB
 double** sorting(double ** x,double ** D,long columns,long rows){
 	int i,j,k;
 	double t;

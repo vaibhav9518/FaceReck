@@ -3,6 +3,7 @@
 #include <malloc.h>
 #include <stdio.h>
 #include <math.h>
+//structure for output of CalcNnDists
 typedef struct{
    MAT D2;
    MAT NN;
@@ -23,13 +24,15 @@ void print(DD** mat,long rows,long columns)
 // rows are vectors
 output CalcNnDists(double **k,long rows,long columns,long nofNn)
 {
+	//Calculate nearest neighbour graph
 	long i,j;
 	DD  **temp,**D=NULL;
 	temp=k;
 	output t;
-    k=sq_dist(k,rows,columns);
+    k=sq_dist(k,rows,columns);// call sq_dist function to find square distances between columns
     if(nofNn==0)
 	{
+	// if number of neighbours is zero	   
 		    D=NULL;
 		    MAT x,y;
 		    x.matrix=k;x.rows=rows;x.columns=rows;
@@ -67,6 +70,7 @@ output CalcNnDists(double **k,long rows,long columns,long nofNn)
 		    		D[i][j]=temp2[i+1][j];
 		    	}
 		    }
+		    // free extra memory
 		    for(i=0;i<rows;i++)
 		    {
 		    	free(temp[i]);

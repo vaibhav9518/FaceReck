@@ -4,8 +4,10 @@
 #include "rhoPathDists2.cpp"
 MAT graphDistKernelC(MAT X,MAT D2, MAT NN,Param param,double * idx,long rows3)
 {
+	// computes a kernel matrix 'E2' based on graph distances.
 	long dimension,i,j;
 	double meanD2=0;
+	// check NN and D2 supplied
 	if(param.nofNn==0)
 	{
 		if(D2.rows!=D2.columns)error("error in GraphDistKernelC\n");
@@ -29,10 +31,10 @@ MAT graphDistKernelC(MAT X,MAT D2, MAT NN,Param param,double * idx,long rows3)
 			D2.matrix[i][j]=D2.matrix[i][j]/meanD2;
 		}
 	}
+	// Calculate rho-path distances
 	MAT E2=final(D2,NN,idx,rows3,param.pathNorm);
 	if(isinf(param.sigma))
 	{
-        //printf("\nis inf");
 		return E2;
 	}   
 }

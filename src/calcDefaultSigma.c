@@ -2,6 +2,7 @@
 #include <malloc.h>
 #include <math.h>
 #include <functions.h>
+
 void quicksort(double* x,long first,long last){
     long pivot,j,i;
     double temp;
@@ -45,7 +46,7 @@ double calcDefaultSigma(double *e2,double k,long size)
 				else sigma2=(sigma2>e2[i])?sigma2:e2[i];
 			}
 		}
-		if((sigma2>pow(10,320))|(sigma2<=0))sigma2=1;
+		if((sigma2>pow(10,320))|(sigma2<=0))sigma2=1;//check if sigma is infinite
 	}
 	if(sigma2<=0)
 	{

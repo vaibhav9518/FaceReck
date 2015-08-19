@@ -3,17 +3,30 @@ import cv2,sys,os
 import numpy
 import threading
 cur_dir=os.path.dirname(os.path.realpath(__file__))
+"""
+  --> This file crops the faces detected in the frames that starts from 100 frames
+  --> before the current frame at which the user clicked and 100 frames after it.
+  --> The images of faces detected is first resized to 50X50 pixels and is then
+  --> checked for blur detection, if the image has blur then it is rejected.
+  --> The algorithm for blur detection uses laplacian filter and checks the value
+  --> calculated from the image against a threshold value of 150,if the value
+  --> calculated from image is less than 150 then the image can have blur.
+  
+"""
 class FaceDetect:
 
    def __init__(self,video,numFrames,File,faceCascade):
+        #intialize variables
         self.video=video
         self.number_of_frames=numFrames  
         self.writeTo=File
         self.faceCascade=faceCascade
 
    def crop(self,img,x,y,w,h,N):
+       # crop the face from frame
        crop_img = img[y:y+h,x:x+w] 
        crop_img=cv2.resize(crop_img,(50,50),fx=0,fy=0)
+       #Convert image to grayscale fro blur detection
        gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY) 
        if(np.max(cv2.convertScaleAbs(cv2.Laplacian(gray,3)))<150):
         return False
@@ -25,6 +38,7 @@ class FaceDetect:
               b+=[sum(j)/3]
            a+=[b]
        a=numpy.array(a)
+       # make feature vector of 50X50 pixels
        a=a.reshape(1,50*50)
        numpy.savetxt(self.File,a,fmt="%10.2f")
        cv2.imwrite(cur_dir+"/../Images/file"+str(N)+".jpg",crop_img)
@@ -44,20 +58,24 @@ class FaceDetect:
        self.File=open(self.writeTo,"w")
        cap = cv2.VideoCapture(vid)
        count=cap.get(cv2.cv.CV_CAP_PROP_FRAME_COUNT)
-       m1=max(0,frame-int(self.number_of_frames/2))     
+       # start from 100 frames before the current frame
+       m1=max(0,frame-int(self.number_of_frames/2))
+       # set the video frame to m1
        cap.set(cv2.cv.CV_CAP_PROP_POS_FRAMES,m1)
        val=0
        while(cap.isOpened()):
           ret, frame = cap.read()
           if(ret==False or val>=self.number_of_frames):
             break
-    
+     
           gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+          # detect faces
           faces=self.detect(gray)
 
           for (x, y, w, h) in faces:
             val+=1 
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+            # if the faces have blur then reject the image
             if( not self.crop(frame,x,y,w,h,val)):
                 val-=1 
 
@@ -67,6 +85,7 @@ class FaceDetect:
        print "Done" 
        print "Total Images:",val
        self.File.close()
+       # choose the algorithm for semi-supervised classifier
        if(LDSorMAD=='MAD'):
           os.system("python "+cur_dir+"/MAD_classifier.py "+str(val)+" "+data1+" "+data2)
        else:

@@ -7,12 +7,18 @@ from PyQt4.QtGui import QApplication, QImage, QPainter, QWidget,QPushButton,QTex
 import threading 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
- 
+"""
+  --> This file creates a PyQT based GUI and provides the user with functionalities like
+  --> Start,Stop and Test.The Test button available on the GUI can be used by user to start
+  --> classification from the frame when the user clicked on it.The Test button starts a
+  --> thread that first calls function to crop faces and then the function to do semi-supervised
+  --> classification.
+
+"""
 cur_dir=os.path.dirname(os.path.realpath(__file__))
 class IplQImage(QImage):
  
     def __init__(self,iplimage):
-        # Rough-n-ready but it works dammit
         alpha = cv.CreateMat(iplimage.height,iplimage.width, cv.CV_8UC1)
         cv.Rectangle(alpha, (0, 0), (iplimage.width,iplimage.height), cv.ScalarAll(255) ,-1)
         rgba = cv.CreateMat(iplimage.height, iplimage.width, cv.CV_8UC4)
@@ -27,6 +33,7 @@ class IplQImage(QImage):
         super(IplQImage,self).__init__(self.__imagedata, iplimage.width, iplimage.height, QImage.Format_RGB32)
  
 class myThread (threading.Thread):
+    # initialize the thread that executes the file to crop faces
     def __init__(self, threadID, name, counter):
         threading.Thread.__init__(self)
         self.tex=0
@@ -38,9 +45,6 @@ class myThread (threading.Thread):
         print_time(self.tex,self)    
 
 def print_time(tex,thread):
-      #tex. 
-      #for i in range(100):
-      #     tex.append("hello")
       os.system("python "+cur_dir+"/video.py "+cur_dir+"/../Training_data/haarcascade_frontalface_default.xml 200 "+sys.argv[1]+" "+str(thread.frame)+" "+sys.argv[2]+" "+sys.argv[3]+" "+sys.argv[4])
       thread.started=False
       thread.completed=True
@@ -50,14 +54,13 @@ thread1 = myThread(1, "Thread-1", 0)
 
 
 class VideoWidget(QWidget):
-    """ A class for rendering video coming from OpenCV """
+    #          *********A class for rendering video coming from OpenCV***********    
  
     def __init__(self, parent=None):
         QWidget.__init__(self)
         layout = QVBoxLayout()
         print sys.argv[1]
         self._capture = cv.CaptureFromFile(sys.argv[1])
-        # Take one frame to query height
         self.count=0
         frame = cv.QueryFrame(self._capture)
         self.setMinimumSize(1155, frame.height)
@@ -97,13 +100,10 @@ class VideoWidget(QWidget):
     def Stop_button(self):
         self._timer.stop()
     def handleButton(self):
-        #global thread1
-        #thread1.start()
         global thread1
         thread1.tex=self.te
         thread1.frame=self.count
         thread1.start()
-        #self._timer.start()
     def _build_image(self, frame):
         if not self._frame:
             self._frame = cv.CreateImage((frame.width, frame.height), cv.IPL_DEPTH_8U, frame.nChannels)
@@ -132,7 +132,6 @@ class VideoWidget(QWidget):
           if(self.lod_count%200==0):
             self.lod_count%=200
             self.te.clear()
-          #self.te.append("done")
         if(thread1.completed):
             self.te.clear()
             f=open(cur_dir+"/../results.txt")

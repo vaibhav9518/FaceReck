@@ -1,8 +1,11 @@
 #define FOR(i,n) for(i=0;i<n;i++)
+
 typedef double DD;
 typedef long LL;
+
 DD** copy(DD** matrix,long rows,long columns,double scalar)
 {
+	// Function to return a new matrix having values same as 'matrix'
 	int i,j;
 	DD** temp=(DD**)calloc(rows,sizeof(DD*));
 	for(i=0;i<rows;i++)
@@ -26,6 +29,7 @@ typedef struct{
 
 Output_Obj obj_fun(MAT w_in,double w1,double *Y,long Y_rows,double C,double C2,double s,MAT X,MAT Xu,MAT R)
 {
+	//Calculate cost function
 	long i,j;
 	Output_Obj O;
 	MAT w, out;
@@ -103,7 +107,6 @@ Output_Obj obj_fun(MAT w_in,double w1,double *Y,long Y_rows,double C,double C2,d
     	for(j=0;j<X.columns;j++)
     	temp2[i][j]=X.matrix[(int)sv[i]-1][j];
     }
-    //FOR(i,zeros)free(temp2[i]);free(temp2);
     temp2=Multiply_Matrices(Transpose(temp2,zeros,X.columns),temp1,X.columns,1,zeros);
     for(i=0;i<w.rows;i++)
     {
@@ -119,7 +122,6 @@ Output_Obj obj_fun(MAT w_in,double w1,double *Y,long Y_rows,double C,double C2,d
     }
     FOR(i,X.columns)free(temp2[i]);free(temp2);
     temp2=Multiply_Matrices(Xu.matrix,temp1,Xu.rows,1,zeros);
-    //FOR(i,zeros)free(temp1[i]);free(temp1);
     for(i=0;i<w.rows;i++)
     {
     	for(j=0;j<w.columns;j++)

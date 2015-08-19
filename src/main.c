@@ -29,6 +29,7 @@ int main(int argc,char** argv){
     }
     fclose(file1);
     temp=k;
+    //         *********** generate weights based on similarity ***********
     k=generate_weights_cosine(k,rows,columns,100);
     FOR(i,rows)free(temp[i]);
     free(temp);
@@ -52,9 +53,11 @@ int main(int argc,char** argv){
     fscanf(file1,"%ld\n",&j);
     labels[j]=0;
     }
+    //          ************* Call Modified adsorption on K with 2 classes ************
     DD** results=MAD(k,rows,2,labels);
     new_string=combine(argv[4],"/../results.txt");
     file1 = fopen(new_string, "w");
+    //          ***********   write results *************
     FOR(i,rows)
     {
         if(((int)results[i][0])==0)fprintf(file1,"Image number %ld is of class 1\n",i+1);

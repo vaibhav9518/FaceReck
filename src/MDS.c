@@ -124,6 +124,7 @@ typedef struct{
 } Output_mds;
 Output_mds MDS(DD** D,long rows,long columns, DD delta)
 {
+	//      ************** function to calculate Classical Multidimensional Scaling *************
 	long  i, j, n;
 	DD    **H, **new_D, **K, **new_k;
 	new_D = (DD**)calloc(rows, sizeof(DD*));

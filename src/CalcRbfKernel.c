@@ -5,8 +5,10 @@
 #define FOR(i,n) for(i=0;i<n;i++)
 typedef double DD;
 typedef long LL;
-// 0 -Gauss
-// 1 -Laplace
+/* rbfName:-
+ 0 -Gauss
+ 1 -Laplace
+ */
 double ** calcRbfKernel( double **D2,long rows,long columns,long rbfName,double  sigma, long symmetrize )
 {
 	long i ,j;
@@ -18,8 +20,10 @@ double ** calcRbfKernel( double **D2,long rows,long columns,long rbfName,double 
 		K[i] = (DD*)calloc(columns, sizeof(DD));
 		
 	}
+	//         ************ compute kernel matrix (K) ***************
     if(rbfName==0)
     {
+    	//       ******** check if sigma is infinity **********
         if( sigma >=pow(10,320) )
         {
                   FOR(i,rows)
@@ -48,6 +52,7 @@ double ** calcRbfKernel( double **D2,long rows,long columns,long rbfName,double 
 	{
  	       printf("error");
     }
+    //     ******* symmetrize kernel *******
     if(symmetrize)
     {
        if(rows>columns)

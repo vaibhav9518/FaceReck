@@ -80,11 +80,6 @@ void find_eigen(double **mat, int n, double*** res_vec, double** res_val)
 }
 
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> b070673d730b0fcea767e5c09bdaef9758114607
 DD** Multiply_Matrices_mds(DD **Mat1, DD **Mat2, LL M, LL Q, LL P)
 {
 	LL i, c, d, k;
@@ -161,13 +156,8 @@ Output_mds MDS(DD** D,long rows,long columns, DD delta)
 			FOR(j, rows)
 				new_k[i][j] = (K[i][j] + K[j][i]) / 2;
 		}
-<<<<<<< HEAD
-		
 		find_eigen(new_k, n, &temp, &val);
-		
-=======
 		find_eigen(new_k, n, &temp, &val);
->>>>>>> b070673d730b0fcea767e5c09bdaef9758114607
 		j = n - 1;
 		for (i = 0; i < n / 2; i++) 
 		{
@@ -210,10 +200,6 @@ Output_mds MDS(DD** D,long rows,long columns, DD delta)
 			}
 		}
 		V = Multiply_Matrices_mds(V, mult_V, n, magn_keep, magn_keep);
-<<<<<<< HEAD
-        
-=======
->>>>>>> b070673d730b0fcea767e5c09bdaef9758114607
 		MAT return_MAT;
 		return_MAT.matrix = V;
 		return_MAT.rows = n;

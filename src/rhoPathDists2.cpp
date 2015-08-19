@@ -19,10 +19,6 @@ inline double max( double a, double b )
 //=== Priority Queue (implemented as Binary Heap)
 //=============================================================================//
 
-//-----------------------------------------------------------------------------//
-//--- insert (reduce distance if already queued)
-//-----------------------------------------------------------------------------//
-
 
 inline void insertIntoPq( int& n, int* const heap, int* const track, const double* const dists, int element )
 {
@@ -89,10 +85,6 @@ inline int fetchFirstFromPq( int& n, int* const heap, int* const track, const do
 //=============================================================================//
 //=== Distance Computations (implented by Dijksta-style algorithm)
 //=============================================================================//
-
-//-----------------------------------------------------------------------------//
-//--- path rho = 0 [back to Euclidean distance]
-//-----------------------------------------------------------------------------//
 
 void calcPathDists0( double* const E2,
 		     const int n, const int l, const int k,

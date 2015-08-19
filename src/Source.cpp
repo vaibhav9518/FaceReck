@@ -116,6 +116,28 @@ double ** train_one_split(MAT Xnldr, double *Yl, long Yl_rows, long m0, Opt opt,
 
 DD** LDS(DD **Xl, LL d0, LL m0, DD **Xu, LL d1, LL m1, DD *Yl, LL Yl_rows, LL classes, DD rho, Opt opt)
 {
+	/* 
+       --> Run the Low Density Separation algorithm as described in
+       --> "Semi-supervised classification by Low Density Separation" by O. Chapelle and A. Zien
+	   --> Xl:  d0 x m0 matrix with the labeled points
+	   --> Xu:  d1 x m1 matrix with the unlabeled points
+	   --> Yl:  column vector of length n containing the labels (+1 or -1 for binary)
+	   --> rho: constant 
+	   --> opt: optional structure containing the (optional) fields,
+	   -->	   C:       the soft margin parameter relative to 1/var^2
+	   -->                  [default = 1]
+	   -->     nofNn:   number of NN in the graph construction 
+	   -->               [default = 0, i.e. fully connected graph]
+	   -->     sigma:   the width of the RBF kernel
+	   -->     delta:   threshold
+	   -->     nofIter: number of iterations for C* to reach C [default = 10]
+	   -->     Cinit:   initial value for C* relative to C [default = 0.01] 
+	   -->     Cfinal:  final value of C* relative to C [default = 1]
+	   -->     maxiter: maximum number of iterations in each gradient
+	   -->              descent (multiplied by nb of variables) [default = 3]
+	   -->     tolfun:  stopping criterion on the function value
+	   -->              (relative to C) [default = 1e-5]
+   */
 	LL i, j, k, K;
 	Param param;
 	MAT D2, NN;
@@ -150,6 +172,10 @@ DD** LDS(DD **Xl, LL d0, LL m0, DD **Xu, LL d1, LL m1, DD *Yl, LL Yl_rows, LL cl
 		}
 	}
 	K = classes;
+	//===================================================
+	//    ****** Compute the full distance graph ******
+	//===================================================
+	
 	output t = CalcNnDists(X.matrix, X.rows, X.columns, opt.nofNn);
 	D2 = t.D2; NN = t.NN;
 	param.pathNorm = rho;
@@ -200,6 +226,10 @@ DD** LDS(DD **Xl, LL d0, LL m0, DD **Xu, LL d1, LL m1, DD *Yl, LL Yl_rows, LL cl
 			E2_array[i*E2.rows + j] = E2.matrix[j][i];
 		}
 	}
+	//===========================================================================
+	//        ********* Compute the new kernel, do the MDS reduction **********
+	//===========================================================================
+	
 	double defaultSigma = calcDefaultSigma(E2_array, 2, E2.columns*E2.rows);
 	double sigma = opt.sigma * defaultSigma;
 	Output_mds mds;
@@ -213,7 +243,10 @@ DD** LDS(DD **Xl, LL d0, LL m0, DD **Xu, LL d1, LL m1, DD *Yl, LL Yl_rows, LL cl
 	}
 	else
 	{
-		param.rbf = 1;
+		param.rbf = 1;// set RBF name equal to Gauss
+		//=================================================
+		//       ****** Calculate RBF Kernel *******
+		//=================================================
 		double **K = calcRbfKernel(E2.matrix, E2.rows, E2.columns, param.rbf, sigma, 1);
 		FOR(i, E2.rows)
 		{
@@ -253,6 +286,7 @@ DD** LDS(DD **Xl, LL d0, LL m0, DD **Xu, LL d1, LL m1, DD *Yl, LL Yl_rows, LL cl
 	FOR(i, mds.Y.rows)
 	{
 		Xnldr[i] = (DD*)calloc(nb_comp, sizeof(DD));
+		// Keep only the first components
 		FOR(j, nb_comp){
 			Xnldr[i][j] = mds.Y.matrix[i][j];
 			mean_Xnldr[j] += mds.Y.matrix[i][j];
@@ -273,9 +307,13 @@ DD** LDS(DD **Xl, LL d0, LL m0, DD **Xu, LL d1, LL m1, DD *Yl, LL Yl_rows, LL cl
 		}
 		sum_var += var / (mds.Y.rows - 1);
 	}
+	// Default value of C = invert of the variance
 	double defaultC = 1 / sum_var;
 	double C = opt.C*defaultC; opt.Cinit = C*opt.Cinit; opt.Cfinal = C*opt.Cfinal; opt.C = C;
 	opt.s = 3;
+	//============================================
+	//       ******* Train the TSVM ********
+	//============================================
 	double **Yu = train_one_split(mds.Y, Yl,Yl_rows,m0, opt, classes);
 	return Yu;
 }
@@ -355,7 +393,9 @@ double ** train_one_split(MAT Xnldr, double *Yl,long Yl_rows,long m0, Opt opt,lo
 	}
 			return NULL;
 }
-void SVD(double*** return_mat,MAT inp){
+void SVD(double*** return_mat,MAT inp)
+{	
+  // Calculate Singular Value Decomposition using Armadillo library	  
   long i ,j;
   fmat A=randu<fmat>(inp.columns,inp.rows);
   double **my_mat=(double**)calloc(inp.columns,sizeof(double*));
@@ -378,6 +418,10 @@ void SVD(double*** return_mat,MAT inp){
 }
 Output_Primal primal_tsvm(MAT X, MAT Y, MAT w0, Opt opt)
 {
+	//======================================================
+	//   **** Solve the TSVM problem in the primal**** 
+	//======================================================
+	
 	MAT new_X;
 	new_X.matrix = (double**)calloc(X.rows, sizeof(double*));
 	new_X.rows = X.rows; new_X.columns = X.columns + 1;
@@ -514,6 +558,10 @@ Output_Primal primal_tsvm(MAT X, MAT Y, MAT w0, Opt opt)
 	pr.w = w;
 	return pr;
 }
+
+//==============================
+//      ******  MAIN *******
+//==============================
 
 int main(int argc,char * argv[]){
   long rows=atoi(argv[3]),columns=atoi(argv[2]),columns2=atoi(argv[1])-columns,i,j;	

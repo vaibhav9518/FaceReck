@@ -1,19 +1,19 @@
 # FaceReck
-###Google/PSU Summer of Code 2015 project:
-######Face Detection and Recognition in Videos (using semi-supervised learning based Algorithms)
+### Google/PSU Summer of Code 2015 project:
+###### Face Detection and Recognition in Videos (using semi-supervised learning based Algorithms)
 
 * **Mentoring Organization**: Portland State University
 * **Mentor**: Bart Massey
 * **Student**: Vaibhav Sharma
 
-##Overview
+## Overview
 FaceReck is a software tool built using C, C++ and Python, which can be used to recognize faces of celebrities
 in videos. The tool uses semi-supervised learning which is a class of supervised learning that also makes use of unlabeled data for training.
 The tool has two main algorithms implemented:
 * **Modified Adsorption** - http://talukdar.net/papers/adsorption_ecml09.pdf
 * **Low Density Separation** -http://www.gatsby.ucl.ac.uk/aistats/fullpapers/198.pdf
 
-##Prerequisites
+## Prerequisites
 The following libraries should be installed before installing this software:
 * **Python libraries**
     * Scipy
